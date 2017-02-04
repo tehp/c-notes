@@ -6,46 +6,39 @@ void format_words(void);
 
 int main(void)
 {
-  squeeze_spaces();
   format_words();
   return 0;
 }
 
 
 void squeeze_spaces(void) {
-int character;
-int space = 0;
-while ((character = getchar()) != EOF) {
-	if(!isspace(character)) {
-		putchar(character);
-		space = 0;
-	} else if (isspace(character) && space == 0) {
-		putchar(character);
-		space = 1;
-	  }
+int c = 0;
+int sp = 0;
+while ((c = getchar()) != EOF) {
+  if(c != ' ') {
+    sp = 0;
+    putchar(c);
+  } else if (c == ' ' && sp == 0) {
+    sp = 1;
+    putchar(c);
   }
+}
 }
 
 
-void format_words(void)
-{
-    int character;
-    int space = 0;
-    while ((character = getchar()) != EOF)
+void format_words(void) {
+int c;
+int sp = 1;
+while ((c = getchar()) != EOF) {
+    if(c == ' ' || c == '"' || c == '\t')
     {
-        if(isspace(character))
-        {
-            putchar(character);
-            space = 1;
-        }
-        else if(space == 1)
-        {
-            putchar(toupper(character));
-            space = 0;
-        }
-        else
-        {
-            putchar(tolower(character));
-        }
+        putchar(c);
+        sp = 1;
+    } else if (sp == 1) {
+        putchar(toupper(c));
+        sp = 0;
+    } else {
+          putchar(tolower(c));
     }
+  }
 }

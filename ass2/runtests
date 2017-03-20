@@ -1,0 +1,60 @@
+#!/bin/bash
+
+correct=0
+tests=0
+
+runtest() {
+  ((tests++))
+  bash -c "$1 < $2 > my-$3 2> /dev/null"
+  cmp $3 my-$3 2> /dev/null
+  if [ $? -eq 0 ]; then
+    printf "passed: "
+    ((correct++))
+  else
+    printf "FAILED: "
+  fi
+  printf "%s\n" "$1 < $2 > my-$3 2> /dev/null"
+}
+
+
+echo "Delete output (my-out*) files from previous tests?"
+echo "Press ctl-c to abort, any other key to delete the files & run tests"
+read x
+rm -f my-out? my-out??
+
+echo "Both sets the same size (-e should have no effect)"
+runtest "./trans abc xyz" "input" "out01"
+runtest "./trans ab bc" "input" "out02"
+runtest "./trans abaca vwxyz" "input" "out03"
+runtest "./trans -e abaca vwxyz" "input" "out04"
+
+echo
+echo "Second set is larger (-e should have no effect)"
+runtest "./trans aei vwxyz" "input" "out05"
+runtest "./trans -e aei vwxyz" "input" "out06"
+
+echo
+echo "first set is larger"
+runtest "./trans abcdef xyz" "input" "out07"
+runtest "./trans abacaba vwxyz" "input" "out08"
+runtest "./trans -e abcdef xyz" "input" "out09"
+runtest "./trans -e abacaba vwxyz" "input" "out10"
+
+echo
+echo "sets with escape characters"
+runtest "./trans '\n' x" "input" "out11"
+runtest "./trans 'a\nc' xyz" "input" "out12"
+runtest "./trans 'a\t\nc' wxyz" "input" "out13"
+runtest "./trans '\\\\n' ab" "input2" "out14"
+runtest "./trans ei 'x\n'" "input2" "out15"
+runtest "./trans '\tu' 'x\n'" "input2" "out16"
+
+echo
+echo "sets with ranges"
+runtest "./trans a-z A-Z" "input" "out17"
+runtest "./trans A-Z a-z" "input" "out18"
+runtest "./trans a-e xyz" "input" "out19"
+runtest "./trans -e a-e xyz" "input" "out20"
+
+echo
+echo "Passed $correct/$tests tests"

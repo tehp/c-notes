@@ -1,10 +1,10 @@
-struct Score {
+struct grade {
   char id[10];
-  int score;
+  int grade;
 };
 
-struct Score s;
+struct grade s;
 
-s.score = 85;
+s.grade = 85;
 
 strcpy(s.id, "a111111111");

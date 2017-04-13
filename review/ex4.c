@@ -75,7 +75,7 @@ size_t delete_all(node **plst, const char *name) {
 
 int main(void) {
   node *head = 0;
-  const char *names[] = {"homer", "bart", "lisa,", "ned", "marge", "monty", "monty"};
+  const char *names[] = {"homer", "bart", "lisa", "ned", "marge", "waylan", "monty"};
   int a[] = {3,2,7,2,3,1};
   size_t i;
   for (i=0; i<sizeof(a)/sizeof(a[0]); i++) {
